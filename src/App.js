@@ -1,20 +1,23 @@
-import React, { useState } from "react";
-import Map from "./Map";
-import { Layers, TileLayer, VectorLayer } from "./Layers";
-import { Style, Icon } from "ol/style";
 import Feature from "ol/Feature";
-import Point from "ol/geom/Point";
-import { osm, vector } from "./Source";
-import { fromLonLat, get } from "ol/proj";
 import GeoJSON from "ol/format/GeoJSON";
+import Point from "ol/geom/Point";
+import { fromLonLat, get } from "ol/proj";
+import { Icon, Style } from "ol/style";
+import React, { useState } from "react";
 import { Controls, FullScreenControl } from "./Controls";
 import FeatureStyles from "./Features/Styles";
+import { Layers, TileLayer, VectorLayer } from "./Layers";
+import Map from "./Map";
+import Overlay from './Overlays/Overlay';
+import Overlays from './Overlays/Overlays';
+import { osm, vector } from "./Source";
 
-import mapConfig from "./config.json";
 import "./App.css";
+import mapConfig from "./config.json";
 
 const geojsonObject = mapConfig.geojsonObject;
 const geojsonObject2 = mapConfig.geojsonObject2;
+const overlayLonLat = mapConfig.overlayLonLat;
 const markersLonLat = [mapConfig.kansasCityLonLat, mapConfig.blueSpringsLonLat];
 
 function addMarkers(lonLatArray) {
@@ -42,6 +45,7 @@ const App = () => {
   const [showLayer1, setShowLayer1] = useState(true);
   const [showLayer2, setShowLayer2] = useState(true);
   const [showMarker, setShowMarker] = useState(false);
+  const [overlayCoor, setOverlayCoor] = useState(false);
 
   const [features, setFeatures] = useState(addMarkers(markersLonLat));
 
@@ -72,6 +76,11 @@ const App = () => {
           )}
           {showMarker && <VectorLayer source={vector({ features })} />}
         </Layers>
+        <Overlays>
+          <Overlay coor={overlayLonLat}>
+            <div>this is an overlay</div>
+          </Overlay>
+        </Overlays>
         <Controls>
           <FullScreenControl />
         </Controls>
